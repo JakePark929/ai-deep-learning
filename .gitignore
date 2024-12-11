@@ -1,2 +1,4 @@
-part4_yanolja_review/.venv
-.env
+### private ###
+*/.venv
+*/.env
+*/__pycache__
