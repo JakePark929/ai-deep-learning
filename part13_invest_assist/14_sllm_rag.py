@@ -16,6 +16,8 @@ prompt += "질문: 삼성전자가 인수하려고 하는 사업분야는?\n"
 prompt += "문서: 삼성전자가 HVAC(냉난방공조) 사업 인수를 타진 중이며, 이는 기존 가전 사업의 약점 보완을 목적으로 한다.\n"
 prompt += "답변: " # hint
 
+print(f"프롬프트: {prompt}")
+
 outputs = pipeline(
     prompt,
     max_new_tokens=100,
@@ -24,4 +26,6 @@ outputs = pipeline(
     top_p=0.9
 )
 
+print("=====")
+print("AI 답변:")
 print(outputs[0]['generated_text'][len(prompt):])
