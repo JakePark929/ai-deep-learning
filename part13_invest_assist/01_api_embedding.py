@@ -26,5 +26,3 @@ score_2_3 = similarity_fn(embedding_2, embedding_3)
 print(score_1_2)
 print(score_1_3)
 print(score_2_3)
-
-
