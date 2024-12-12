@@ -1,7 +1,7 @@
 import os
 
 from dotenv import load_dotenv
-from part0_research_assist.faiss_manager import FAISSIndexManager
+from service.faiss_manager import FAISSIndexManager
 # from langchain_huggingface import HuggingFaceEmbeddings # type: ignore
 from langchain_openai import OpenAIEmbeddings
 
