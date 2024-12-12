@@ -53,7 +53,7 @@ class FAISSIndexManager:
         faiss_retriever = self.vectorstore.as_retriever(search_kwargs={"k": top_k})
         search_results = faiss_retriever.invoke(query)
         print(f"검색결과: {search_results}")
-        print(f"===== DB 에서 답변 검색이 완료되었습니다. =====\n")
+        print(f"===== DB 에서 답변 검색이 완료되었습니다. =====")
         
         return search_results
 

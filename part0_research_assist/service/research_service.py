@@ -1,6 +1,8 @@
 import os
 from service.faiss_manager import FAISSIndexManager
 
+import torch
+from transformers import pipeline
 from openai import OpenAI
 from dotenv import load_dotenv
 # from langchain_huggingface import HuggingFaceEmbeddings # type: ignore
@@ -9,18 +11,30 @@ from langchain_openai import OpenAIEmbeddings
 class ResearchService:
     def __init__(self):
         """
-        Initializes the ResearchAssistantService with necessary configurations.
+        ResearchAssistantService를 초기화하는 생성자입니다.
+        환경 변수와 FAISS, OpenAI 클라이언트를 설정합니다.
         """
-        # Load environment variables (if not already loaded)
+        # 환경 변수 로드 (이미 로드되지 않은 경우)
         load_dotenv()
         OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
         INDEX_PATH = os.getenv("INDEX_PATH")
 
-        # Initialize OpenAI and FAISS manager
+        # FAISS 매니저 초기화
         self.embedding = OpenAIEmbeddings(api_key=OPENAI_API_KEY)
         self.faiss_manager = FAISSIndexManager(INDEX_PATH, self.embedding)
-        self.client = OpenAI(api_key=OPENAI_API_KEY)
+
+        # OpenAI 모델 초기화
         self.model = "gpt-3.5-turbo-0125"
+        self.client = OpenAI(api_key=OPENAI_API_KEY)
+
+        # 42dot 모델 파이프라인 초기화
+        self.kslm_id = "42dot/42dot_LLM-SFT-1.3B"
+        self.pipeline = pipeline(
+            "text-generation",
+            model=self.kslm_id,
+            model_kwargs={"torch_dtype": torch.float16}
+        )
+        self.pipeline.model.eval()
 
     def chatgpt_generate(self, query: str) -> str:
         """
@@ -42,9 +56,24 @@ class ResearchService:
             },
         ]
         response = self.client.chat.completions.create(model=self.model, messages=message)
-        return response.choices[0].message.content
 
-    def prompt_and_generate(self, query: str) -> str:
+        return response.choices[0].message.content
+    
+    def kslm_generate(self, query: str) -> str:
+        """
+        SLLM 모델을 사용하여 응답을 생성하는 함수입니다.
+        """
+        answer = self.pipeline(
+            query,
+            max_new_tokens=100,
+            do_sample=True,
+            temperature=0.5,
+            top_p=0.9
+        )
+
+        return answer[0]['generated_text'][len(query):]
+
+    def prompt_and_generate(self, query: str, model_name: str = "openai") -> str:
         """
         Generates a prompt from FAISS search results and queries OpenAI to generate a response.
         """
@@ -63,5 +92,10 @@ class ResearchService:
 
         prompt += "답변: "
         
-        # Generate the response using OpenAI
-        return self.chatgpt_generate(prompt)
+        # model_name에 따라 다르게 실행 (기본값: "openai")
+        if model_name.lower() == "openai":
+            return self.chatgpt_generate(prompt)
+        elif model_name.lower() == "42dot":
+            return self.kslm_generate(prompt)
+        else:
+            raise ValueError(f"지원하지 않는 모델 이름: {model_name}")
