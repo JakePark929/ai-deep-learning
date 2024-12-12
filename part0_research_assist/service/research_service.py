@@ -32,6 +32,8 @@ class ResearchService:
                 "content": """당신은 연구원입니다. 연구에 관한 질문이 주어졌을 때, 질문에 첨부된 문서를 기반으로 답변하는 것이 목표입니다.
                 답변 결과는 다음 조건들을 충족해야 합니다:
                 1. 모든 문장은 항상 존댓말로 끝나야 합니다.
+                2. 첨부된 문서에 답변할 내용이 없으면 답변을 할 수 없다고 합니다.
+                3. 첨부된 문서에 해당 내용이 있으면 해당 출처를 반환합니다. 
                 """
             },
             {
@@ -50,7 +52,7 @@ class ResearchService:
         docs = [doc for doc in self.faiss_manager.search(query)]
         
         # Build the prompt from the search results
-        prompt = f"""아래 질문을 기반으로 검색된 질문에 첨부된 문서 내용을 참고하여 질문에 대한 답변을 생성하시오. 문서에 있는 출처도 명시합니다.
+        prompt = f"""아래 질문을 기반으로 검색된 질문에 첨부된 문서 내용을 참고하여 질문에 대한 답변을 생성하시오.
         질문: {query}\n"""
 
         for i, doc in enumerate(docs):
