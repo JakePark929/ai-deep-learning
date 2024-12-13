@@ -1,0 +1,40 @@
+{
+    "title": "llama_report",
+    "num_evaluations": 1,
+    "date": "2024-12-13",
+    "evaluation_results": [
+        {
+            "input_data": "혁신활동지표인 우리나라 기업의 R&D 지출규모는 OECD 회원국 중 몇 위인가?",
+            "gold_data": "2022년 우리나라의 R&D 지출규모는 OECD 회원국 중, 이스라엘 (6.0%)에 이어 2위에 해당한다. 출처, 페이지",
+            "response": "1) 우리나라 기업의 R&D 지출규모는 OECD 회원국 중 몇 위인가?\n        답변: OECD 회원국 중 우리나라 기업의 R&D 지출규모는 OECD 회원국 중 2위이다.\n        이유: 우리나라 기업의 R&D 지출규모는 OECD 회원국 중 2위이다.\n        이유: 우리나라 기업의 R&D 지출규모는 OECD 회원국 중 2위이다.\n        이유: 우리나라 기업",
+            "bleu_score": 0.1226680511549673,
+            "rouge_scores": {
+                "rouge1": {
+                    "precision": 0.23529411764705882,
+                    "recall": 0.5714285714285714,
+                    "fmeasure": 0.3333333333333333
+                },
+                "rouge2": {
+                    "precision": 0.125,
+                    "recall": 0.3333333333333333,
+                    "fmeasure": 0.18181818181818182
+                },
+                "rougeL": {
+                    "precision": 0.23529411764705882,
+                    "recall": 0.5714285714285714,
+                    "fmeasure": 0.3333333333333333
+                }
+            },
+            "response_time_sec": 2111.22
+        }
+    ],
+    "average_scores": {
+        "bleu_score": 0.1226680511549673,
+        "rouge_scores": {
+            "rouge1": 0.3333333333333333,
+            "rouge2": 0.18181818181818182,
+            "rougeL": 0.3333333333333333
+        },
+        "response_time_sec": 2111.22
+    }
+}
