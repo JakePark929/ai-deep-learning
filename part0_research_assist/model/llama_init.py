@@ -1,7 +1,12 @@
 import time
+from datetime import datetime
 
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
+
+def formatted_time(timestamp: float) -> str:
+
+    return datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
 
 # 모델 ID 설정
 model_id = "meta-llama/Llama-3.2-3B"
@@ -36,6 +41,7 @@ print(f"프롬프트: {prompt}")
 
 # 생성 시간 측정 시작
 start_time = time.time()
+print(f"===== 답변 생성을 시작합니다. {formatted_time(start_time)} =====")
 
 # 텍스트 생성 실행
 outputs = text_gen_pipeline(
@@ -48,6 +54,7 @@ outputs = text_gen_pipeline(
 
 # 생성 시간 측정 끝
 end_time = time.time()
+print(f"===== 답변 생성을 시작합니다. {formatted_time(end_time)} =====")
 
 # 결과 출력
 generated_text = outputs[0]['generated_text']

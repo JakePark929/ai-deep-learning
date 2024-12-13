@@ -1,10 +1,10 @@
 import os
 from service.faiss_manager import FAISSIndexManager
 
-import torch
-from transformers import pipeline
-from openai import OpenAI
 from dotenv import load_dotenv
+import torch
+from transformers import pipeline, AutoTokenizer, AutoModelForCausalLM
+from openai import OpenAI
 # from langchain_huggingface import HuggingFaceEmbeddings # type: ignore
 from langchain_openai import OpenAIEmbeddings
 
@@ -27,14 +27,30 @@ class ResearchService:
         self.model = "gpt-3.5-turbo-0125"
         self.client = OpenAI(api_key=OPENAI_API_KEY)
 
+        # Llama 3.2 모델 초기화
+        self.llama_id = "meta-llama/Llama-3.2-3B"
+        self.llama_tokenizer = AutoTokenizer.from_pretrained(self.llama_id)
+        self.llama_model = AutoModelForCausalLM.from_pretrained(
+            self.llama_id,
+            torch_dtype=torch.float16,  # 메모리 절약을 위한 float16 사용
+            device_map="auto"          # 자동으로 GPU/CPU 매핑
+        )
+        self.llama_model.config.pad_token_id = self.llama_tokenizer.eos_token_id
+        self.llama_model.eval()
+        self.llama_pipeline = pipeline(
+                "text-generation",
+                model=self.llama_model,
+                tokenizer=self.llama_tokenizer
+        )
+
         # 42dot 모델 파이프라인 초기화
         self.kslm_id = "42dot/42dot_LLM-SFT-1.3B"
-        self.pipeline = pipeline(
+        self.kslm_pipeline = pipeline(
             "text-generation",
             model=self.kslm_id,
             model_kwargs={"torch_dtype": torch.float16}
         )
-        self.pipeline.model.eval()
+        self.kslm_pipeline.model.eval()
 
     def chatgpt_generate(self, query: str) -> str:
         """
@@ -59,11 +75,19 @@ class ResearchService:
 
         return response.choices[0].message.content
     
+    def llama_generate(self, query: str) -> str :
+        answer = self.llama_pipeline(
+            query,
+            max_new_tokens=100,
+            do_sample=True,
+            temperature=0.5,
+            top_p=0.9
+        )
+
+        return answer[0]['generated_text'][len(query):]
+    
     def kslm_generate(self, query: str) -> str:
-        """
-        SLLM 모델을 사용하여 응답을 생성하는 함수입니다.
-        """
-        answer = self.pipeline(
+        answer = self.kslm_pipeline(
             query,
             max_new_tokens=100,
             do_sample=True,
@@ -95,6 +119,8 @@ class ResearchService:
         # model_name에 따라 다르게 실행 (기본값: "openai")
         if model_name.lower() == "openai":
             return self.chatgpt_generate(prompt)
+        elif model_name.lower() == "llama":
+            return self.llama_generate(prompt)
         elif model_name.lower() == "42dot":
             return self.kslm_generate(prompt)
         else:
