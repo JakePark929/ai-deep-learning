@@ -12,9 +12,6 @@ from konlpy.tag import Okt
 # KoNLPy의 Okt를 사용하여 토큰화
 okt = Okt()
 
-# ResearchService 인스턴스 초기화
-research_service = ResearchService()
-
 # BLEU와 ROUGE 점수 계산 함수
 def calculate_bleu(reference, candidate):
 
@@ -26,7 +23,7 @@ def calculate_rouge(reference, candidate):
     return scorer.score(reference, candidate)
 
 # 평가 함수
-def evaluate(input_data, gold_data, model_name: str ="openai"):
+def evaluate(input_data, gold_data, research_service: ResearchService, model_name: str="openai"):
     # 시간 측정 시작
     start_time = time.time()
     print(f"===== {model_name} 답변 생성을 시작합니다. {formatted_time(start_time)} =====")
@@ -73,13 +70,16 @@ def evaluate(input_data, gold_data, model_name: str ="openai"):
         "response_time_sec": round(elapsed_time, 2)
     }
 
-def generate_report(input_datas, gold_datas, model_name: str ="openai", num_evaluations=1):
+def generate_report(input_datas, gold_datas, model_name: str="openai", num_evaluations=1):
+    # ResearchService 인스턴스 초기화
+    research_service = ResearchService(model_list=[model_name])
+
     evaluation_results = []
 
     for i in range(num_evaluations):
         print(f"\n##### {model_name.upper()} TEST {i + 1} #####")
         for j in range(len(input_datas)):
-            result = evaluate(input_data=input_datas[j], gold_data=gold_datas[j], model_name=model_name)
+            result = evaluate(input_data=input_datas[j], gold_data=gold_datas[j], research_service=research_service, model_name=model_name)
             evaluation_results.append(result)
 
     # 평균 계산
@@ -140,11 +140,11 @@ if __name__ == '__main__':
 
     input_datas = [
         "혁신활동지표인 우리나라 기업의 R&D 지출규모는 OECD 회원국 중 몇 위인가?",
-        "2022년 현재 우리나라 국내 총 생산대비 R&D 지출 규모는?"
+        # "2022년 현재 우리나라 국내 총 생산대비 R&D 지출 규모는?"
     ]
     gold_datas = [
         "2022년 우리나라의 R&D 지출규모는 OECD 회원국 중, 이스라엘 (6.0%)에 이어 2위에 해당한다. 출처, 페이지",
-        "2022년 현재 우리나라 국내 총 생산대비 R&D 지출 규모는 전체 R&D 지출의 79%를 차지한다. 출처, 페이지"
+        # "2022년 현재 우리나라 국내 총 생산대비 R&D 지출 규모는 전체 R&D 지출의 79%를 차지한다. 출처, 페이지"
     ]
 
     generate_report(input_datas=input_datas, gold_datas=gold_datas, model_name="openai", num_evaluations=num_evaluations)

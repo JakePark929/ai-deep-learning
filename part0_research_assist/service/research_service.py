@@ -9,11 +9,10 @@ from openai import OpenAI
 from langchain_openai import OpenAIEmbeddings
 
 class ResearchService:
-    def __init__(self):
-        """
-        ResearchAssistantService를 초기화하는 생성자입니다.
-        환경 변수와 FAISS, OpenAI 클라이언트를 설정합니다.
-        """
+    def __init__(self, model_list=None):
+        if model_list is None:
+             model_list = ["openai", "llama", "42dot"]
+    
         # 환경 변수 로드 (이미 로드되지 않은 경우)
         load_dotenv()
         OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -23,31 +22,41 @@ class ResearchService:
         self.embedding = OpenAIEmbeddings(api_key=OPENAI_API_KEY)
         self.faiss_manager = FAISSIndexManager(INDEX_PATH, self.embedding)
 
-        # OpenAI 모델 초기화
-        self.model = "gpt-3.5-turbo-0125"
-        self.client = OpenAI(api_key=OPENAI_API_KEY)
+        if "openai" in model_list:
+            self.init_openai(key=OPENAI_API_KEY)
+        if "llama" in model_list:
+            self.init_llama()
+        if "42dot" in model_list:
+            self.init_kslm()
 
-        # Llama 3.2 모델 초기화
-        self.llama_id = "meta-llama/Llama-3.2-3B"
-        self.llama_tokenizer = AutoTokenizer.from_pretrained(self.llama_id)
-        self.llama_model = AutoModelForCausalLM.from_pretrained(
-            self.llama_id,
+    # OpenAI 모델 초기화
+    def init_openai(self, key):
+        self.model = "gpt-3.5-turbo-0125"
+        self.client = OpenAI(api_key=key)
+
+    # Llama 3.2 모델 초기화
+    def init_llama(self):
+        llama_id = "meta-llama/Llama-3.2-3B"
+        llama_tokenizer = AutoTokenizer.from_pretrained(llama_id)
+        llama_model = AutoModelForCausalLM.from_pretrained(
+            llama_id,
             torch_dtype=torch.float16,  # 메모리 절약을 위한 float16 사용
             device_map="auto"          # 자동으로 GPU/CPU 매핑
         )
-        self.llama_model.config.pad_token_id = self.llama_tokenizer.eos_token_id
-        self.llama_model.eval()
+        llama_model.config.pad_token_id = llama_tokenizer.eos_token_id
+        llama_model.eval()
         self.llama_pipeline = pipeline(
                 "text-generation",
-                model=self.llama_model,
-                tokenizer=self.llama_tokenizer
+                model=llama_model,
+                tokenizer=llama_tokenizer
         )
-
+    
+    def init_kslm(self):
         # 42dot 모델 파이프라인 초기화
-        self.kslm_id = "42dot/42dot_LLM-SFT-1.3B"
+        kslm_id = "42dot/42dot_LLM-SFT-1.3B"
         self.kslm_pipeline = pipeline(
             "text-generation",
-            model=self.kslm_id,
+            model=kslm_id,
             model_kwargs={"torch_dtype": torch.float16}
         )
         self.kslm_pipeline.model.eval()
@@ -97,7 +106,7 @@ class ResearchService:
 
         return answer[0]['generated_text'][len(query):]
 
-    def prompt_and_generate(self, query: str, model_name: str = "openai") -> str:
+    def prompt_and_generate(self, query: str, model_name: str="openai") -> str:
         """
         Generates a prompt from FAISS search results and queries OpenAI to generate a response.
         """
