@@ -12,7 +12,7 @@ def formatted_time(timestamp: float) -> str:
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-# 모델 ID 설정 및 모델 로드드
+# 모델 ID 설정 및 모델 로드
 model_id = "gpt-3.5-turbo-0125"
 client = OpenAI(api_key=OPENAI_API_KEY)
 

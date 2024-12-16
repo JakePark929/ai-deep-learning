@@ -140,14 +140,14 @@ if __name__ == '__main__':
 
     input_datas = [
         "혁신활동지표인 우리나라 기업의 R&D 지출규모는 OECD 회원국 중 몇 위인가?",
-        # "2022년 현재 우리나라 국내 총 생산대비 R&D 지출 규모는?"
+        "2022년 현재 우리나라 국내 총 생산대비 R&D 지출 규모는?"
     ]
     gold_datas = [
         "2022년 우리나라의 R&D 지출규모는 OECD 회원국 중, 이스라엘 (6.0%)에 이어 2위에 해당한다. 출처, 페이지",
-        # "2022년 현재 우리나라 국내 총 생산대비 R&D 지출 규모는 전체 R&D 지출의 79%를 차지한다. 출처, 페이지"
+        "2022년 현재 우리나라 국내 총 생산대비 R&D 지출 규모는 전체 R&D 지출의 79%를 차지한다. 출처, 페이지"
     ]
 
     generate_report(input_datas=input_datas, gold_datas=gold_datas, model_name="openai", num_evaluations=num_evaluations)
-    # generate_report(input_datas=input_datas, gold_datas=gold_datas, model_name="llama", num_evaluations=num_evaluations)
-    # generate_report(input_datas=input_datas, gold_datas=gold_datas, model_name="42dot", num_evaluations=num_evaluations)
+    generate_report(input_datas=input_datas, gold_datas=gold_datas, model_name="llama", num_evaluations=num_evaluations)
+    generate_report(input_datas=input_datas, gold_datas=gold_datas, model_name="42dot", num_evaluations=num_evaluations)
     
