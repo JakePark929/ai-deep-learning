@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 from openai import Client
 
-from prompt_template import prompt_template
+from prompt_template import prompt_template, prompt_template_json
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -41,6 +41,29 @@ def inference(review):
 
     return output
 
+def inference_json(review):
+    prompt = prompt_template_json.format(review=review)
+
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {
+                "role": "system",
+                "content": "You are a helpful assistant."
+            },
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
+        temperature=0 # 0 ~ 2.0
+    )
+
+    output = response.choices[0].message.content
+
+    return output
+
 if __name__ == '__main__':
-    print(inference("진짜 쓰레기 영화"))
+    # print(inference("진짜 쓰레기 영화"))
+    print(inference_json("친구랑 보기 정말 좋은 영화네요.."))
     
