@@ -4,7 +4,7 @@ import json
 from dotenv import load_dotenv
 from openai import Client
 
-from prompt_template import prompt_template, prompt_template_json
+from ch02.prompt_template import prompt_template, prompt_template_json
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -62,11 +62,13 @@ def inference_json(review):
     )
 
     cost = calculate_cost(response.usage.prompt_tokens, response.usage.completion_tokens)
+    const_json = {"cost": f"{cost:.3f} 원"}
 
     output = response.choices[0].message.content
     output_json = json.loads(output)
+    output_json.update(const_json)
 
-    return output_json, cost
+    return output_json
 
 def calculate_cost(prompt_tokens, completion_tokens):
 
@@ -74,7 +76,5 @@ def calculate_cost(prompt_tokens, completion_tokens):
 
 if __name__ == '__main__':
     # print(inference("진짜 쓰레기 영화"))
-    output, cost = inference_json("진짜 돈 아까움..")
-    print(output)
-    print(f"비용: {cost:.3f} 원")
+    output = inference_json("진짜 돈 아까움..")
     
