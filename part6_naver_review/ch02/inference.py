@@ -57,15 +57,24 @@ def inference_json(review):
                 "content": prompt
             }
         ],
-        temperature=0 # 0 ~ 2.0
+        temperature=0, # 0 ~ 2.0
+        response_format={"type": "json_object"}
     )
+
+    cost = calculate_cost(response.usage.prompt_tokens, response.usage.completion_tokens)
 
     output = response.choices[0].message.content
     output_json = json.loads(output)
 
-    return output_json
+    return output_json, cost
+
+def calculate_cost(prompt_tokens, completion_tokens):
+
+    return (prompt_tokens / 1000000 * 0.5 + completion_tokens / 1000000 * 1.5) * 1400
 
 if __name__ == '__main__':
     # print(inference("진짜 쓰레기 영화"))
-    print(inference_json("친구랑 보기 정말 좋은 영화네요.."))
+    output, cost = inference_json("진짜 돈 아까움..")
+    print(output)
+    print(f"비용: {cost:.3f} 원")
     
