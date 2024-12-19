@@ -4,7 +4,7 @@ import json
 from dotenv import load_dotenv
 from openai import Client
 
-from prompt_template import prompt_template, prompt_template_function_calling
+from ch03.prompt_template import prompt_template, prompt_template_function_calling
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
