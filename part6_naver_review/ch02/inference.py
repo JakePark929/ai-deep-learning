@@ -1,4 +1,5 @@
 import os
+import json
 
 from dotenv import load_dotenv
 from openai import Client
@@ -60,8 +61,9 @@ def inference_json(review):
     )
 
     output = response.choices[0].message.content
+    output_json = json.loads(output)
 
-    return output
+    return output_json
 
 if __name__ == '__main__':
     # print(inference("진짜 쓰레기 영화"))
