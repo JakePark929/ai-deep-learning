@@ -1,9 +1,14 @@
 import os
+import json
+from typing import List
 
 from dotenv import load_dotenv
 from openai import Client
+from pydantic import BaseModel
+from langchain_core.output_parsers import PydanticOutputParser
 
 from download_data import get_urls
+from prompt_template import prompt_template
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -69,6 +74,39 @@ def filter_image_urls(url_list, max_count=5):
     
     return filtered_urls[:max_count]
 
+class QA(BaseModel):
+    question: str
+    answer: str
+
+class Output(BaseModel):
+    qa_list: List[QA]
+
+output_parser = PydanticOutputParser(pydantic_object=Output)
+
+def inference_many_json(url_list):
+    prompt = prompt_template.format(format_instruction=output_parser.get_format_instructions())
+    content = [
+        {"type": "text", "text": prompt}
+    ]
+    for url in filter_image_urls(url_list):
+        content.append({"type": "image_url", "image_url": {"url": url}})
+    print(content)
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "user", "content": content}
+        ],
+        max_tokens=1000,
+        response_format={"type": "json_object"}
+    )
+    output = response.choices[0].message.content
+    output_json = json.loads(output)   
+
+    return output_json
+
 if __name__ == "__main__":
     url_list = get_urls()
-    print(inference_many(url_list))
+    result = inference_many_json(url_list)
+
+    print(json.dumps(result, indent=2, ensure_ascii=False))
