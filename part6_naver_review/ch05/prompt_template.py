@@ -65,6 +65,8 @@ prompt_template_langchain = """다음은 영화에 대한 리뷰들입니다.
 2. 리뷰에서 긍정적인 키워드, 부정적인 키워드를 추출해주세요.
 3. 리뷰 내용들을 종합적으로 요약해주세요.
 
+{format_instructions}
+
 ```reviews
 {reviews}
 ```"""
