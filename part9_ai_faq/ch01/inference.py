@@ -8,8 +8,8 @@ from openai import Client
 from pydantic import BaseModel
 from langchain_core.output_parsers import PydanticOutputParser
 
-from download_data import get_data
-from prompt_template import prompt_template, prompt_template_json
+from ch01.download_data import get_data
+from ch01.prompt_template import prompt_template, prompt_template_json
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -42,7 +42,7 @@ output_parser = PydanticOutputParser(pydantic_object=Output)
 def inference_json(product_detail):
     prompt = prompt_template_json.format(
         format_instruction=output_parser.get_format_instructions(),
-        product_detail=product_detail
+        product_detail=process_text(product_detail)
     )
 
     response = client.chat.completions.create(
@@ -73,7 +73,6 @@ def process_text(text):
 
 if __name__ == "__main__":
     product_detail = get_data()
-    processed_text = process_text(product_detail)
-    result = inference_json(processed_text)
+    result = inference_json(product_detail)
 
     print(json.dumps(result, indent=2, ensure_ascii=False))

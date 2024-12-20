@@ -7,8 +7,8 @@ from openai import Client
 from pydantic import BaseModel
 from langchain_core.output_parsers import PydanticOutputParser
 
-from download_data import get_urls
-from prompt_template import prompt_template
+from ch02.download_data import get_urls
+from ch02.prompt_template import prompt_template
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
