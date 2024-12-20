@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.prompts import PromptTemplate
 
-from prompt_template import prompt_template, prompt_template_langchain
+from ch04.prompt_template import prompt_template, prompt_template_langchain
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
