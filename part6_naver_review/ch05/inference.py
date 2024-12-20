@@ -1,4 +1,6 @@
 import os
+import json
+from pprint import pprint
 
 from dotenv import load_dotenv
 from openai import Client
@@ -6,7 +8,7 @@ from langchain_openai import ChatOpenAI
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
-from prompt_template import prompt_template, prompt_template_langchain
+from prompt_template import prompt_template, prompt_template_langchain, json_schema
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -14,7 +16,7 @@ client = Client(api_key=OPENAI_API_KEY)
 
 def inference_all(reviews):
     reviews = "\n".join([f"review_no: {review['id']}\tcontent: {review['document']}" for review in reviews])
-    prompt = prompt_template.format(reviews=reviews)
+    prompt = prompt_template.format(json_schema=json_schema, reviews=reviews)
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
@@ -22,10 +24,12 @@ def inference_all(reviews):
             {"role":"user", "content": prompt}
         ],
         temperature=0,
+        response_format={"type": "json_object"}
     )
     output = response.choices[0].message.content
+    output_json = json.loads(output)
 
-    return output
+    return output_json
 
 prompt = PromptTemplate(
     template=prompt_template_langchain,
@@ -46,7 +50,7 @@ def inference_all_langchain(reviews):
     return output
     
 if __name__ == "__main__":
-    print(inference_all_langchain([
+    pprint(inference_all([
         {"id": 1, "document": "뭐야 이 평점들은.... 나쁘진 않지만 10점 짜리는 더더욱 아니잖아"},
         {"id": 2, "document": "지루하지는 않은데 완전 막장임"},
         {"id": 3, "document": "3D만 아니었어도 별 다섯개 줬을텐데.."},
