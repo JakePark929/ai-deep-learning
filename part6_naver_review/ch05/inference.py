@@ -12,7 +12,7 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser
 from langchain_community.callbacks.manager import get_openai_callback
 
-from prompt_template import prompt_template, prompt_template_function_calling, prompt_template_langchain, json_schema
+from ch05.prompt_template import prompt_template, prompt_template_function_calling, prompt_template_langchain, json_schema
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
