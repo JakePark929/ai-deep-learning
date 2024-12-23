@@ -6,4 +6,5 @@
 ## Part 5. 카카오톡 대화 요약 봇
 ## Part 6. 네이버 영화 리뷰 분석 봇
 ## Part 8. RAG 아키텍처
+## Part 9. AI-FAQ 생성 봇봇
 ## Part 13. 투자 어시스턴트 with sLM & RAG
