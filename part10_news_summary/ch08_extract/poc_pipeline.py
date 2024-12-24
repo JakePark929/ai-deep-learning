@@ -1,9 +1,12 @@
 import os
+import json
+from datetime import datetime
 
 from dotenv import load_dotenv
 from openai import Client
 
 from prompt_template import json_schema, prompt_template
+from mongodb_manager import save_one
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -38,6 +41,25 @@ news = """삼성 전자는 최근 가전 사업 수익성이 크게 악화돼 �
 31일 로이터와 블룸버그 등 해외언론 보도를 종합하면, 삼성 전자가 존슨 콘트롤즈가 최근 매물로 내놓은 HVAC(냉난방공조) 사업 인수를 타진 중인것으로 나타났다.
 """
 
-query = prompting(news)
-answer = chatgpt_generate(query)
-print(answer)
+def pipeline():
+    query = prompting(news)
+    answer = chatgpt_generate(query)
+
+    try:
+        answer_json = json.loads(answer)
+        current_date = datetime.now().strftime('%Y-%m-%d')
+        answer_json['company'] = "삼성전자"
+        answer_json['date'] = current_date
+        
+    except json.JSONDecodeError as e:
+        print("[JSON 파싱 오류] 원본 응답:", answer)
+
+    if answer_json is not None:
+        insert_id = save_one(json=answer_json)
+        print(f"db에 저장되었습니다 - {insert_id}")
+    else:
+        print("유효한 JSON 응답이 아니므로 DB에 저장되지 않았습니다.")
+        print("[JSON 오류] 원본:", json.dumps(answer_json, indent=2, ensure_ascii=False))
+
+if __name__ == "__main__":
+    pipeline()
