@@ -30,7 +30,7 @@ mongo_client = MongoClient(
 )
 
 db = mongo_client['project1']
-collection = db['NewsAnalysis']
+collection = db['NewsAnalysis1']
 
 def get_url(keyword):
     f = Filters(
@@ -114,11 +114,12 @@ def analysis():
 
     텍스트: """
 
-    orgs = ["apple", "microsoft"]
+    orgs = ["google", "microsoft"]
 
     # 각 기업에 대해 처리
     for org in orgs:
         df = get_url(org)
+        dates = df['seendate']
         texts, titles = url_crawling(df)
 
         for idx, text in enumerate(texts):
@@ -136,6 +137,9 @@ def analysis():
                 news_item["text"]  = text
                 news_item["analysis"] = parsed_answer
                 news_item["date"] = datetime.datetime.now()
+                for item in parsed_answer:
+                    item["seendate"] = dates[idx]
+
                 insert_id = collection.insert_one(news_item)
                 print(insert_id)
             except json.JSONDecodeError as e:
