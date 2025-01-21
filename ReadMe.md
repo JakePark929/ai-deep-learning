@@ -8,4 +8,5 @@
 ## Part 8. RAG 아키텍처
 ## Part 9. AI-FAQ 생성 봇
 ## Part 10. 뉴스 정리 봇
+## Part 12. 사내 업무 에이전트
 ## Part 13. 투자 어시스턴트 with sLM & RAG
