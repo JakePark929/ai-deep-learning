@@ -13,7 +13,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 BASE_URL = 'https://www.yogiyo.co.kr/mobile/#/'
 URL = [
-    'https://www.yogiyo.co.kr/mobile/#/522757/'
+    # 'https://www.yogiyo.co.kr/mobile/#/522757/',
+    'https://www.yogiyo.co.kr/mobile/#/1212106/',
+    'https://www.yogiyo.co.kr/mobile/#/1272543/'
 ]
 
 load_dotenv()
@@ -47,7 +49,7 @@ def crawl_single_restaurant(restaurant_url):
     search_box = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="search"]/div/form/input')))
 
     # 검색어 입력
-    my_address = '카카오판교'
+    my_address = '과천펜타원'
     search_box.send_keys(my_address)
 
     # 검색 버튼 누르기
