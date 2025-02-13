@@ -14,8 +14,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 BASE_URL = 'https://www.yogiyo.co.kr/mobile/#/'
 URL = [
     # 'https://www.yogiyo.co.kr/mobile/#/522757/',
-    'https://www.yogiyo.co.kr/mobile/#/1212106/',
-    'https://www.yogiyo.co.kr/mobile/#/1272543/'
+    # 'https://www.yogiyo.co.kr/mobile/#/1212106/',
+    # 'https://www.yogiyo.co.kr/mobile/#/1272543/',
+    'https://www.yogiyo.co.kr/mobile/#/1295650/',
+    'https://www.yogiyo.co.kr/mobile/#/1319121/',
+    'https://www.yogiyo.co.kr/mobile/#/1318272/'
 ]
 
 load_dotenv()
