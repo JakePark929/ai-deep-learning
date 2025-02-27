@@ -27,6 +27,7 @@ class BankAccount(ABC):
     def info(self):
         return f"{self._holder_name}님의 계좌 잔액은 {self.__balance}원 입니다."
     
+# 적금 계좌
 class SavingAccount(BankAccount):
     def __init__(self, holder_name, balance, interest_rate):
         super().__init__(holder_name, balance)
@@ -46,6 +47,7 @@ class SavingAccount(BankAccount):
     def info(self):
         print(f"[예금/{self.get_account_number()}] 잔액 ${self.get_balance()}, 이율: {self.__interest_rate}%, 출금 제한 여부: {self.__is_locked}")
 
+# 예금 계좌
 class CheckingAccount(BankAccount):
     def __init__(self, holder_name, balance, withdraw_limit = 500):
         super().__init__(holder_name, balance)
@@ -56,3 +58,9 @@ class CheckingAccount(BankAccount):
             raise ValueError("출금 한도를 초과했습니다.")
         else:
             super().withdraw(amount)
+
+    def update_withdraw_limit(self, new_limit):
+        self.withdraw_limit = new_limit
+
+    def info(self):
+        print(f"[입출금/{self.get_account_number()}] 잔액 ${self.get_balance()}, 출금 한도: {self.withdraw_limit}")
