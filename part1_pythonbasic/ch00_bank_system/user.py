@@ -1,8 +1,11 @@
 class BankUser:
-    def __init__(self, holder_name, money):
-        self.__name = holder_name
+    def __init__(self, name, money):
+        self.__name = name
         self.__money = money
         self.__accounts = []
+
+    def get_name(self):
+        return self.__name
 
     def add_account(self, account):
         self.__accounts.append(account)

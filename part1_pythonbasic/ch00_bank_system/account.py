@@ -41,6 +41,7 @@ class SavingAccount(BankAccount):
             super().withdraw(amount)
 
     def unlock(self):
+        self.__is_locked = False
         interest = self.get_balance() * self.__interest_rate
         self.deposit(interest)
 
