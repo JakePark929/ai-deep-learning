@@ -1,5 +1,5 @@
-from account import SavingAccount, CheckingAccount
-from user import BankUser
+from account.account import SavingAccount, CheckingAccount
+from user.user import BankUser
 
 user1 = BankUser("박중언", 1000)
 
