@@ -1,6 +1,6 @@
 import pygame
 from config.constants import *
-from service.ai import TicTacToeAI
+from service.ai_perfect import TicTacToeAI
 
 class TicTacToe:
     def __init__(self):
