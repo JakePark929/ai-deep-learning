@@ -1,6 +1,22 @@
 import math
 
 class TicTacToeAI:
+        # Check if there is a winner
+    def check_winner(self, board):
+        for row in range(3):
+            if board[row][0] == board[row][1] == board[row][2] and board[row][0] != ' ':
+                return board[row][0]
+        for col in range(3):
+            if board[0][col] == board[1][col] == board[2][col] and board[0][col] != ' ':
+                return board[0][col]
+        if board[0][0] == board[1][1] == board[2][2] and board[0][0] != ' ':
+            return board[0][0]
+        if board[0][2] == board[1][1] == board[2][0] and board[0][2] != ' ':
+            return board[0][2]
+        if all(board[row][col] != ' ' for row in range(3) for col in range(3)):
+            return 'Draw'
+        return None
+    
     # Minimax algorithm
     def minimax(self, board, depth, is_maximizing):
         winner = self.check_winner(board)
@@ -31,22 +47,6 @@ class TicTacToeAI:
                         board[row][col] = ' '
                         best_score = min(score, best_score)
             return best_score
-        
-    # Check if there is a winner
-    def check_winner(self, board):
-        for row in range(3):
-            if board[row][0] == board[row][1] == board[row][2] and board[row][0] != ' ':
-                return board[row][0]
-        for col in range(3):
-            if board[0][col] == board[1][col] == board[2][col] and board[0][col] != ' ':
-                return board[0][col]
-        if board[0][0] == board[1][1] == board[2][2] and board[0][0] != ' ':
-            return board[0][0]
-        if board[0][2] == board[1][1] == board[2][0] and board[0][2] != ' ':
-            return board[0][2]
-        if all(board[row][col] != ' ' for row in range(3) for col in range(3)):
-            return 'Draw'
-        return None
 
     # Find the best move
     def best_move(self, board):
