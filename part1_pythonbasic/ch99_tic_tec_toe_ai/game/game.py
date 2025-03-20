@@ -1,32 +1,6 @@
 import pygame
+from config.constants import *
 from service.ai import TicTacToeAI
-
-WIDTH, HEIGHT = 300, 400
-BOARD_SIZE = 300
-LINE_WIDTH = 5
-BOARD_ROWS, BOARD_COLS = 3, 3
-SQUARE_SIZE = BOARD_SIZE // BOARD_COLS
-CIRCLE_RADIUS = SQUARE_SIZE // 3
-CIRCLE_WIDTH = 5
-CROSS_WIDTH = 5
-SPACE = 25
-
-BUTTON_Y = 357
-BUTTON_WIDTH = 100
-BUTTON_HEIGHT = 35
-
-START_BUTTON_X = 40
-RESET_BUTTON_X = 160
-
-WHITE = (255, 255, 255)
-LIGHT_GRAY = (230, 230, 230)
-GRAY = (200, 200, 200)
-DARK_GRAY = (150, 150, 150)
-BLACK = (0, 0, 0)
-LIGHT_RED = (255, 100, 100)
-RED = (255, 0, 0)
-BLUE = (0, 0, 255)
-GREEN = (0, 200, 0)
 
 class TicTacToe:
     def __init__(self):
