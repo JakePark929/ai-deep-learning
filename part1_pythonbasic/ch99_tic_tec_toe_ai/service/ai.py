@@ -1,7 +1,7 @@
 import math
 
 class TicTacToeAI:
-        # Check if there is a winner
+    # Check if there is a winner
     def check_winner(self, board):
         for row in range(3):
             if board[row][0] == board[row][1] == board[row][2] and board[row][0] != ' ':
