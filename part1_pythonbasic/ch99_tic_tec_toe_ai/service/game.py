@@ -1,4 +1,3 @@
-### game.py ###
 import pygame
 from service.ai import TicTacToeAI
 
@@ -23,7 +22,7 @@ class TicTacToe:
         self.board = [[' ' for _ in range(BOARD_COLS)] for _ in range(BOARD_ROWS)]
         self.running = True
         self.ai = TicTacToeAI()
-        
+
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("Tic Tac Toe")
@@ -50,13 +49,13 @@ class TicTacToe:
         col = x // SQUARE_SIZE
         row = y // SQUARE_SIZE
         if self.board[row][col] == ' ':
-            self.board[row][col] = 'X'
+            self.board[row][col] = 'O'
             if self.ai.check_winner(self.board):
                 self.running = False
             if self.running:
                 ai_move = self.ai.best_move(self.board)
                 if ai_move != (-1, -1):
-                    self.board[ai_move[0]][ai_move[1]] = 'O'
+                    self.board[ai_move[0]][ai_move[1]] = 'X'
             self.draw_figures()
             if self.ai.check_winner(self.board):
                 self.running = False
