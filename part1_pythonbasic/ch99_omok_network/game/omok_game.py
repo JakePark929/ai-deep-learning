@@ -1,5 +1,8 @@
+import time
 import pygame
+
 from config.constants import *
+from service.rule import is_double_three
 
 class OmokGame:
     def __init__(self):
@@ -8,6 +11,7 @@ class OmokGame:
         pygame.display.set_caption("Omok - Five in a Row")
         self.font = pygame.font.Font(None, 40)
         self.button_font = pygame.font.Font(None, 30)
+        self.forbidden_time = None
         self.reset_game()
 
     def reset_game(self):
@@ -61,12 +65,13 @@ class OmokGame:
 
         pygame.display.update()
 
-    def display_turn(self, message=None):
+    def display_turn(self, message=None, color=BLACK):
+        """ 현재 턴을 'Now Turn: 바둑돌' 형태로 중앙 정렬하여 표시 """
         pygame.draw.rect(self.screen, GRAY, (0, 0, WIDTH, 50))  # 상단 바 다시 그리기
 
         if message:
-            # 게임 종료 메시지 표시 (승리/무승부 메시지)
-            text_surface = self.font.render(message, True, BLACK)
+            # 게임 종료 또는 금지 메시지 표시 (색상 지정 가능)
+            text_surface = self.font.render(message, True, color)
             text_rect = text_surface.get_rect(center=(WIDTH // 2, 25))
             self.screen.blit(text_surface, text_rect)
         else:
@@ -111,25 +116,28 @@ class OmokGame:
         pygame.display.update()
 
     def handle_click(self, x, y):
-        """ 마우스 클릭 이벤트 처리 """
-        # 🔥 게임 진행 중이면 Start 버튼 클릭 무시
+        """ 마우스 클릭 이벤트 처리 (쌍삼 방지 적용) """
         if START_BUTTON_X <= x <= START_BUTTON_X + BUTTON_WIDTH and BUTTON_Y <= y <= BUTTON_Y + BUTTON_HEIGHT:
             self.start_game()
             return
 
-        # Reset 버튼은 언제든지 동작 가능
         if RESET_BUTTON_X <= x <= RESET_BUTTON_X + BUTTON_WIDTH and BUTTON_Y <= y <= BUTTON_Y + BUTTON_HEIGHT:
             self.reset_game()
             return
 
-        # 게임이 진행 중이 아니면 클릭을 무시
         if y < 50 or not self.running:
             return
 
-        # 돌 두기 처리
         col = x // CELL_SIZE
         row = (y - 50) // CELL_SIZE
+
         if self.board[row][col] == ' ':
+            # 🔥 쌍삼(삼삼) 방지 적용
+            if is_double_three(self.board, row, col, self.current_player):
+                self.display_turn("It's a Double Three!", color=RED)
+                self.forbidden_time = time.time() + EVENT_MESSAGE_TIME  # 1.5초 동안 메시지 유지
+                return  # 돌을 놓지 않음
+
             self.board[row][col] = self.current_player
             self.current_player = 'W' if self.current_player == 'B' else 'B'
             self.draw_stones()
@@ -138,7 +146,7 @@ class OmokGame:
             winner = self.check_winner()
             if winner:
                 self.display_turn(f"{'Black' if winner == 'B' else 'White'} Wins!")
-                self.running = False  # 🔥 게임 종료
+                self.running = False  # 게임 종료
                 self.draw_buttons()  # 버튼 UI 갱신
 
     def check_winner(self):
@@ -167,7 +175,7 @@ class OmokGame:
         return None
     
     def run(self):
-        """ 게임 실행 루프 """
+        """ 게임 실행 루프 (쌍삼 메시지 복구 포함) """
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -176,3 +184,8 @@ class OmokGame:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     x, y = event.pos
                     self.handle_click(x, y)
+
+            # 🔥 쌍삼 메시지 시간이 지나면 원래 턴으로 복구
+            if self.forbidden_time and time.time() > self.forbidden_time:
+                self.forbidden_time = None
+                self.display_turn()  # 원래 턴으로 복구
