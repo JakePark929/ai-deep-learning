@@ -36,11 +36,8 @@ RAG 기술을 기반으로 로컬에서도 운영가능한 개인화된 챗봇�
 ### 파이썬 오목 게임
 ```
 파이게임으로 만든 오목게임  
-네트워크 대전 및 AI 대전 추가 예정  
+네트워크 대국 및 AI 대국 추가 예정  
 ```
-
-#### 실행 화면
-![오목 실행](./part1_pythonbasic/src/omok_play.png)
 
 #### 사용 기술
 - Python 3.12
@@ -49,11 +46,14 @@ RAG 기술을 기반으로 로컬에서도 운영가능한 개인화된 챗봇�
 #### 기능 설명
 - 게임 시작 및 종료
 - 상단 턴 표시
-- 쌍삼 방지, 육목 유효
+- 쌍삼 방지, 육목 무효화
 
 #### 구현 예정 기능
 - 로컬 네트워크 대국
 - User vs AI 대국
+
+#### 실행 화면
+![오목 실행](./part1_pythonbasic/src/omok_play.png)
 
 ### 파이썬 틱택토 with AI
 ```
@@ -73,7 +73,7 @@ AI를 점진적으로 개선하여 basic-advance-perfect 로 레벨 구분
 - 레벨별(basic-advance-perfect) AI 대전
 
 #### 실행 화면
-![틱택토 실행](./part1_pythonbasic/src/tictectoe_play.png)
+![틱택토 실행](./part1_pythonbasic/src/tictectoe_play.gif)
 
 ## Part 4. 야놀자 리뷰 요약 봇
 ### 실제 서비스 화면(예시)
