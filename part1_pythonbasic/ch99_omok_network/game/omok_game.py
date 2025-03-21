@@ -2,7 +2,7 @@ import time
 import pygame
 
 from config.constants import *
-from service.rule import is_double_three
+from service.rule import is_double_three, check_winner
 
 class OmokGame:
     def __init__(self):
@@ -116,7 +116,7 @@ class OmokGame:
         pygame.display.update()
 
     def handle_click(self, x, y):
-        """ 마우스 클릭 이벤트 처리 (쌍삼 방지 적용) """
+        """ 마우스 클릭 이벤트 처리 (쌍삼 방지, 6목은 그냥 진행) """
         if START_BUTTON_X <= x <= START_BUTTON_X + BUTTON_WIDTH and BUTTON_Y <= y <= BUTTON_Y + BUTTON_HEIGHT:
             self.start_game()
             return
@@ -134,45 +134,22 @@ class OmokGame:
         if self.board[row][col] == ' ':
             # 🔥 쌍삼(삼삼) 방지 적용
             if is_double_three(self.board, row, col, self.current_player):
-                self.display_turn("It's a Double Three!", color=RED)
+                self.display_turn("Forbidden: Double Three!", color=RED)
                 self.forbidden_time = time.time() + EVENT_MESSAGE_TIME  # 1.5초 동안 메시지 유지
                 return  # 돌을 놓지 않음
 
+            # 🔥 6목(장목)은 그냥 진행 (막지 않음)
             self.board[row][col] = self.current_player
             self.current_player = 'W' if self.current_player == 'B' else 'B'
             self.draw_stones()
             self.display_turn()
 
-            winner = self.check_winner()
+            # 승리 체크 (5목만 인정)
+            winner = check_winner(self.board)
             if winner:
                 self.display_turn(f"{'Black' if winner == 'B' else 'White'} Wins!")
                 self.running = False  # 게임 종료
                 self.draw_buttons()  # 버튼 UI 갱신
-
-    def check_winner(self):
-        """ 5개 연속된 돌이 있는지 체크 """
-        directions = [(1, 0), (0, 1), (1, 1), (1, -1)]
-
-        for row in range(GRID_SIZE):
-            for col in range(GRID_SIZE):
-                if self.board[row][col] == ' ':
-                    continue
-
-                player = self.board[row][col]
-
-                for dr, dc in directions:
-                    count = 1
-                    for step in range(1, 5):
-                        r, c = row + dr * step, col + dc * step
-                        if 0 <= r < GRID_SIZE and 0 <= c < GRID_SIZE and self.board[r][c] == player:
-                            count += 1
-                        else:
-                            break
-
-                    if count == 5:
-                        return player  # 승자 반환
-
-        return None
     
     def run(self):
         """ 게임 실행 루프 (쌍삼 메시지 복구 포함) """
