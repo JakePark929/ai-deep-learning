@@ -3,14 +3,15 @@ from config.constants import *
 
 def draw_board(screen):
     screen.fill(BOARD_COLOR)
-    pygame.draw.rect(screen, GRAY, (0, 0, WIDTH, 50))
-    pygame.draw.rect(screen, LIGHT_GRAY, (0, HEIGHT - 50, WIDTH, 50))
+
+    pygame.draw.rect(screen, GRAY, (0, 0, WIDTH, BOARD_TOP_OFFSET))
+    pygame.draw.rect(screen, LIGHT_GRAY, (0, HEIGHT - BOARD_BOTTOM_OFFSET, WIDTH, BOARD_BOTTOM_OFFSET))
 
     for i in range(GRID_SIZE):
-        pygame.draw.line(screen, BLACK, (i * CELL_SIZE + CELL_SIZE // 2, 50),
-                         (i * CELL_SIZE + CELL_SIZE // 2, HEIGHT - 50), 1)
-        pygame.draw.line(screen, BLACK, (0, i * CELL_SIZE + CELL_SIZE // 2 + 50),
-                         (WIDTH, i * CELL_SIZE + CELL_SIZE // 2 + 50), 1)
+        pygame.draw.line(screen, BLACK, (i * CELL_SIZE + CELL_SIZE // 2, BOARD_TOP_OFFSET),
+                         (i * CELL_SIZE + CELL_SIZE // 2, HEIGHT - BOARD_BOTTOM_OFFSET), 1)
+        pygame.draw.line(screen, BLACK, (0, i * CELL_SIZE + CELL_SIZE // 2 + BOARD_TOP_OFFSET),
+                         (WIDTH, i * CELL_SIZE + CELL_SIZE // 2 + BOARD_TOP_OFFSET), 1)
     pygame.display.update()
 
 def draw_buttons(screen, running):
@@ -31,14 +32,12 @@ def draw_buttons(screen, running):
 def draw_stones(screen, board):
     for row in range(GRID_SIZE):
         for col in range(GRID_SIZE):
+            x = col * CELL_SIZE + CELL_SIZE // 2
+            y = row * CELL_SIZE + CELL_SIZE // 2 + BOARD_TOP_OFFSET
             if board[row][col] == 'B':
-                pygame.draw.circle(screen, STONE_BLACK,
-                                   (col * CELL_SIZE + CELL_SIZE // 2, row * CELL_SIZE + CELL_SIZE // 2 + 50),
-                                   CELL_SIZE // 3)
+                pygame.draw.circle(screen, STONE_BLACK, (x, y), CELL_SIZE // 3)
             elif board[row][col] == 'W':
-                pygame.draw.circle(screen, STONE_WHITE,
-                                   (col * CELL_SIZE + CELL_SIZE // 2, row * CELL_SIZE + CELL_SIZE // 2 + 50),
-                                   CELL_SIZE // 3)
+                pygame.draw.circle(screen, STONE_WHITE, (x, y), CELL_SIZE // 3)
     pygame.display.update()
 
 def display_turn(screen, message=None, color=BLACK, current_player=None):

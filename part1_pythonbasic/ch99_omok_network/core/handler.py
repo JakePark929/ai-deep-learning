@@ -7,6 +7,7 @@ from ui.messages import (
     FORBIDDEN_DOUBLE_THREE,
     WINNER_TEXT
 )
+from core.utils import is_click_near_cross
 from service.rule import is_double_three, check_winner
 from ui.display import draw_stones, display_turn
 
@@ -25,15 +26,11 @@ def handle_click(game, x, y):
         return
 
     # 보드 좌표 변환
-    row = (y - 50) // CELL_SIZE
+    row = (y - BOARD_TOP_OFFSET) // CELL_SIZE
     col = x // CELL_SIZE
 
     # 십자점 기준 정밀 클릭 조건 추가
-    center_x = col * CELL_SIZE + CELL_SIZE // 2
-    center_y = row * CELL_SIZE + CELL_SIZE // 2 + 50
-    dx = x - center_x
-    dy = y - center_y
-    if dx * dx + dy * dy > CLICK_RADIUS * CLICK_RADIUS:
+    if not is_click_near_cross(x, y, col, row):
         return
 
     # 유효 범위 확인
