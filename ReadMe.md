@@ -30,9 +30,51 @@ RAG 기술을 기반으로 로컬에서도 운영가능한 개인화된 챗봇�
 |평가환경|클라우드|로컬|로컬|
 
 ### 실행화면
-![서비스 실행](./part0_research_assist/src/서비스_실행화면.png)
+![서비스 실행](./part0_research_assist/src/서비스_실행화면.gif)
 
 ## Part 1. 파이썬 기초
+### 파이썬 오목 게임
+```
+파이게임으로 만든 오목게임  
+네트워크 대전 및 AI 대전 추가 예정  
+```
+
+#### 실행 화면
+![오목 실행](./part1_pythonbasic/src/omok_play.png)
+
+#### 사용 기술
+- Python 3.12
+- pygame
+
+#### 기능 설명
+- 게임 시작 및 종료
+- 상단 턴 표시
+- 쌍삼 방지, 육목 유효
+
+#### 구현 예정 기능
+- 로컬 네트워크 대국
+- User vs AI 대국
+
+### 파이썬 틱택토 with AI
+```
+파이게임으로 만든 틱택토 게임  
+Minmax Algorithm 을 활용한 틱택토 AI 구현
+AI를 점진적으로 개선하여 basic-advance-perfect 로 레벨 구분
+```
+
+#### 사용 기술
+- Python 3.12
+- pygame
+- Minmax Algorithm
+
+#### 기능 설명
+- 게임 시작 및 종료
+- 상단 턴 표시
+- 레벨별(basic-advance-perfect) AI 대전
+
+#### 실행 화면
+![틱택토 실행](./part1_pythonbasic/src/tictectoe_play.png)
+
 ## Part 4. 야놀자 리뷰 요약 봇
 ### 실제 서비스 화면(예시)
 ![서비스 화면](./part4_yanolja_review/src/now_services.png)
@@ -50,6 +92,7 @@ OpenAI의 API를 이용하여 직접 만들어 보고 평가를 진행한다.
 
 ### 실행 화면
 ![데모 화면](./part4_yanolja_review/src/launch_demo.png)
+
 ## Part 5. 카카오톡 대화 요약 봇
 ## Part 6. 네이버 영화 리뷰 분석 봇
 ## Part 8. RAG 아키텍처
@@ -57,6 +100,7 @@ OpenAI의 API를 이용하여 직접 만들어 보고 평가를 진행한다.
 ## Part 10. 뉴스 정리 봇
 ## Part 12. 사내 업무 에이전트
 ## Part 13. 투자 어시스턴트 with sLM & RAG
+
 ## Part 14. 배민 리뷰 기반 메뉴/맛집 추천
 ### 기술 스택
 - OpenAI ChatGPT
