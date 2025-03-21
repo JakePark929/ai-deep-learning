@@ -28,6 +28,14 @@ def handle_click(game, x, y):
     row = (y - 50) // CELL_SIZE
     col = x // CELL_SIZE
 
+    # 십자점 기준 정밀 클릭 조건 추가
+    center_x = col * CELL_SIZE + CELL_SIZE // 2
+    center_y = row * CELL_SIZE + CELL_SIZE // 2 + 50
+    dx = x - center_x
+    dy = y - center_y
+    if dx * dx + dy * dy > CLICK_RADIUS * CLICK_RADIUS:
+        return
+
     # 유효 범위 확인
     if not (0 <= row < GRID_SIZE and 0 <= col < GRID_SIZE):
         game.forbidden_time = time.time() + EVENT_MESSAGE_TIME
